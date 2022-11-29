@@ -10,23 +10,107 @@
     <title>RemSeries</title>
 </head>
 <body>
-    <h2 style="text-align: center;";">Séries</h2>
+    <nav  class="navbar navbar-light" style="background-color: #CFF5E7;">
+        <h2 style="margin:auto; color: rgb(112, 89, 89);">Séries</h2>
+    </nav>
+    
+    <form action="/addserie" method="post">
+        <div class="mb-3" style="padding:2em">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto"  name="series" placeholder="Name series" type="text">
+        </div>
+        <div style="width: 5%; margin:auto">
+            <button  class="btn btn-primary" type="submit" style="align-items: center;">Add Series</button>
+        </div>
+    </form>
+    <br>
+  
+<!----------------------------Creating cards--------------->
     <div class="container">
         <div class="row">
-            <div class ="col blocks">
-                Serie1<br>
-                <button>
-                    +
-                </button>
-            </div>
-            <div class ="col blocks">
-                Serie2
-            </div>  
-            <div class ="col blocks">
-                Serie3
-            </div>
-        </div>
+    {%for name in serie%} 
+            <div class="col-4" style="padding-bottom: 2em;">
+                
+                <div class="card"  name="{{ name['id']|string}}" style="max-width: 18rem; background-color: rgb(255, 255, 255);">
+
+                   {%if not name['link'] %}
+                   <div class="card-head">
+ 
+                    <form action="/addlink" method="post">
+                        <input type="text" name="serieslink" placeholder="URL series" style="margin: 1em; width:10em;">
+                        <input type="submit" value="save">
+                        <input type="hidden" name="idseries" value="{{ name['id'] }}">
+                    </form>
+                   </div>
+                   {%else%}
+                   <a style="text-decoration:none;" target="_blank" href="{{ name['link'] }}">        
+                    <div class="card-body">
+  
+                        
+                        
+                        
+
+                        <!--------form by click  ------->
+
+                        <form action="{{ name['link'] }}" id="{{ name['id'] }}" target="_blank">
+                        </form>
+                        <!------------->
+
+                        
+                        <div class="container">
+                            <div style="display:inline; position: absolute;"><h3>{{ name['name']}}</h3> </div>
+                        
+                            <div style="display:inline; position: relative; left: 100%;">
+                                ..<!--put the options config: change colors, change name series, change link-->
+                            </div>
+                            
+                            <hr>
+                            <div class="row">
+                                <div class="col-8" style="text-align: left;">
+                                    Episode: <h3 style="display:inline; text-align:right; padding-left: 0.35em;">{{ name['ep'] }}</h3>
+                                </div>
+
+                                <div class="col">
+                                    {% set cname = '#c'+ name['id']|string %}
+                                </div>
+                            </div>                           
+                        </div>                               
+                    </div>
+                </a> 
+                    <div class="card-footer" style="background-color: rgb(202, 203, 255);">
+                        <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="{{ cname }}" style="padding: 0%; height: 20px; width:fit-content; display: flex; margin: 1% auto";>
+                            <h4 style="position: relative; padding: 0%; align-self: center;">...</h4>
+                        </button>
+                        <div class="collapse" id="c{{ name['id']|string }}">
+                            <form action="/addepisode" method="post">
+                                <div style="padding: 1em;">
+                                    <input autocomplete="off" class="form-control form-control-sm mx-auto w-auto" min="0" name="episode" placeholder="Episode" type="number">
+                                
+                                </div>
+                                <input type="hidden" name="idseries" value="{{ name['id'] }}">
+                                <div style="margin:auto; width:2cm;">
+                                    <button class="btn" type="submit">Save</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                        {%endif%}  
+    
+                    <div class="container"style="background-color: rgb(202, 203, 255);">
+                        <div style="margin:auto; width: 79.3625px;">
+                            <form action="/del" method="post">
+                                <button  class="btn btn-light delete" type="submit" name="nseries" value="{{ name['id'] }}">Delete</button>
+                            </form>
+                        </div>
+                    </div>       
+                </div>
+                <!--close the card-->
+            </div> 
+ 
+    {%endfor%}
+        </div> 
     </div>
-        
+
+    <script src="/static/script/scrits.js"></script>
 </body>
 </html>
